@@ -8,8 +8,8 @@ namespace PDV_MODOCONSOLA
     {//Inicio de la clase Item
 
         public int Id { get; set; }
-        public string ItemName { get; set; }
-        public int ItemPrice { get; set; }
+        public string ItemNombre { get; set; }
+        public int ItemPrecio { get; set; }
         public int ItemStock { get; set; }
 
     }//Fin de la clase Item

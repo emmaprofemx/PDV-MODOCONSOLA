@@ -36,7 +36,7 @@ namespace PDV_MODOCONSOLA
 
 
 
-        //Metodos 
+        //~~~~~~Metodos~~~~~~~ 
         public void DesplegarItem()
         {
             Console.WriteLine("Productos");
@@ -46,12 +46,12 @@ namespace PDV_MODOCONSOLA
 
             foreach (var item in Items)
             {
-                Console.WriteLine(item.Id + "\t" + item.ItemName + "\t\t" + item.ItemPrice + "\t" + item.ItemStock);
+                Console.WriteLine(item.Id + "\t" + item.ItemNombre + "\t\t" + item.ItemPrecio + "\t" + item.ItemStock);
             }
 
         }
 
-
+        //Metodo EntradaUsuario
         public int EntradaUsuario(string inputPrompt, string errorPrompt)
         {
             //Mostrando mensaje de entrada
@@ -70,8 +70,91 @@ namespace PDV_MODOCONSOLA
 
         }
 
+        public void DefaultInit()
+        {
+            Items = new List<Item> { 
+                new Item { Id = 1 , ItemNombre = "Pluma" , ItemPrecio = 5 , ItemStock = 10} , 
+                new Item { Id = 2 , ItemNombre = "Libro" , ItemPrecio = 100 , ItemStock = 15} , 
+                new Item { Id = 3 , ItemNombre = "Marcador" , ItemPrecio = 50 , ItemStock = 20} , 
+                new Item { Id = 4 , ItemNombre = "Borrador" , ItemPrecio = 6 , ItemStock = 100}
+            };
+            ComprarItems = new Dictionary<int, ComprarItem>();
+        }
 
-    }//Fin de la clase Inicio
+
+        public void AdminOperacion()
+        {
+            Console.WriteLine("1)Para agregar nuevo Item \n 2)Para actualizar inventario \n 3)Desplegar lista \n 4)Cerrar Sesion");
+        }
+
+
+        public void AgregarItem()
+        {
+            Console.WriteLine("Ingresa el nombre del producto:");
+            string nombre = Console.ReadLine();
+            int precio = EntradaUsuario("Ingresa el precio" , "Equivocado , Ingresa el precio correcto");
+            int cantidad = EntradaUsuario("Ingresa la cantidad" , "Equivocado , Ingresa la cantidad correcta");
+
+            Items.Add(new Item { Id = Items.Count + 1 , ItemNombre = nombre , ItemPrecio = precio , ItemStock = cantidad});
+            Console.WriteLine("Item agregado exitosamente");
+
+
+        }
+
+        public void ActualizarItem()
+        {
+            var input = EntradaUsuario("Agrega un Item" , AdminOpcionPrompt);
+            if (input != 4)
+            {
+                int quantity = EntradaUsuario(IngresarCantidad, CantidadErrorPrompt);
+                if (input <= Items.Count)
+                {
+
+                    if (quantity > 0)
+                    {
+                        if (Items != null)
+                        {
+                            Items[input - 1].ItemStock += quantity;
+                        }
+                        DesplegarItem();
+                        AdminOperacion();
+                        return;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(AdminOpcionErrorPrompt);
+                    AdminOperacion();
+                }
+
+            } else
+            {
+                DesplegarItem();
+                AdminOperacion();
+
+            }
+              
+ 
+            
+
+        }
+
+        public void OpAdmin()
+        {
+            Console.WriteLine("1) Agregar nuevo producto \n 2)Actualizar Stock \n 3) Desplegar Lista \n 4)Salir");
+            int opadmin = EntradaUsuario(AdminOpcionPrompt , AdminOpcionErrorPrompt);
+            switch (opadmin)
+            {
+                case (int)PDV_MODOCONSOLA.AdminOperation.AgregarItem:
+                    AgregarItem();
+                    break;
+                case (int)PDV_MODOCONSOLA.AdminOperation.ActualizarItem:
+                    
+                default:
+                    break;
+            }
+        }
+    }//******Fin de la clase Inicio
 
 
 
