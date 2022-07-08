@@ -12,5 +12,7 @@ namespace PDV_MODOCONSOLA
         public int ItemPrecio { get; set; }
         public int ItemStock { get; set; }
 
+
+
     }//Fin de la clase Item
 }

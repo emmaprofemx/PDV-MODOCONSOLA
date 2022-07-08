@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PDV_MODOCONSOLA
 {
-    public enum AdminOperation
+    public enum AdminOperaciones
     {
         AgregarItem = 1,
         ActualizarItem = 2,
@@ -104,6 +104,24 @@ namespace PDV_MODOCONSOLA
         public void ActualizarItem()
         {
             var input = EntradaUsuario("Agrega un Item" , AdminOpcionPrompt);
+            /*if (input != 4)
+                if (input <= Items.Count)
+                {
+                    int quantity = EntradaUsuario(IngresarCantidad, CantidadErrorPrompt);
+                    if (quantity > 0)
+                        if (Items != null) Items[input - 1].ItemStock += quantity;
+                    DesplegarItem();
+                    AdminOperacion();
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine(AdminOpcionErrorPrompt);
+                    AdminOperacion();
+                }
+            else
+                DesplegarItem();
+            AdminOperacion();*/
             if (input != 4)
             {
                 int quantity = EntradaUsuario(IngresarCantidad, CantidadErrorPrompt);
@@ -133,27 +151,133 @@ namespace PDV_MODOCONSOLA
                 AdminOperacion();
 
             }
-              
- 
-            
 
         }
 
+
+        public void ConsumidorOperacion()
+        {
+            DesplegarItem();
+            Console.WriteLine(VerCarritoPrompt);
+            int opc = EntradaUsuario(ComprarPrompt , ErrorCompraPrompt);
+            switch (opc)
+            {
+                case 0:
+                    //Desple
+                    DesplegarItem();
+                    break;
+                default:
+                    Item getItem = GetItem(opc);
+                    if (getItem == null)
+                    {
+                        Console.WriteLine(ItemNotFound);
+                        ConsumidorOperacion();
+                    }
+                    else
+                    {
+                        agregarAlCarrito(getItem);
+                        //  AddToCart(getItem);
+                        DesplegarItem();
+                    }
+                    break;
+            }
+        }
+
+        public void agregarAlCarrito(Item item)
+        {
+
+        }
+
+        public void Ejecutar()
+        {
+            Console.WriteLine("Ingresa 0 para iniciar como administrador o 1  para ingresar como consumidor");
+            int opclogin = EntradaUsuario(LoginOpcionPrompt , LoginOpcionErrorPrompt);
+            switch (opclogin)
+            {
+                case 0:
+                    Console.WriteLine("Ingresando como Admin...");
+                    DesplegarItem();
+                    AdminOperacion();
+                    break;
+                case 1:
+                    Console.WriteLine("Ingresando como Consumidor...");
+                    //DesplegarItem();
+                    //AdminOperacion();
+                    break;
+                default:
+                    break;
+            }
+
+        }
+       
         public void OpAdmin()
         {
             Console.WriteLine("1) Agregar nuevo producto \n 2)Actualizar Stock \n 3) Desplegar Lista \n 4)Salir");
             int opadmin = EntradaUsuario(AdminOpcionPrompt , AdminOpcionErrorPrompt);
             switch (opadmin)
             {
-                case (int)PDV_MODOCONSOLA.AdminOperation.AgregarItem:
+                case (int)PDV_MODOCONSOLA.AdminOperaciones.AgregarItem:
                     AgregarItem();
                     break;
-                case (int)PDV_MODOCONSOLA.AdminOperation.ActualizarItem:
-                    
+                case (int)PDV_MODOCONSOLA.AdminOperaciones.ActualizarItem:
+                    ActualizarItem();
+                    break;
+                case (int)PDV_MODOCONSOLA.AdminOperaciones.DesplegarItem:
+                    DesplegarItem();
+                    AdminOperacion();
+                    break;
+                case (int)PDV_MODOCONSOLA.AdminOperaciones.Cerrar:
+                    DesplegarItem();
+                    break;
                 default:
+                    Console.WriteLine(AdminOpcionErrorPrompt);
+                    AdminOperacion();
                     break;
             }
         }
+
+        public void DeplegarCarrito(Dictionary<int , ComprarItem> compraItemList)
+        {
+            int total = 0;
+            Console.WriteLine("\n-----------------------------------------Productos en el carrito---------------------------------------\n");
+            Console.WriteLine("Item\t\tCantidad\t\tPrecio\t\tSuma");
+            foreach (var articulo in compraItemList)
+            {
+                Suma += articulo.Value.Cantidad;
+                int price = articulo.Value.Cantidad * articulo.Value.Item.ItemPrecio;
+                Console.WriteLine(articulo.Value.Item.ItemNombre + "\t\t" + articulo.Value.Cantidad + "\t\t\t" + articulo.Value.Item.ItemPrecio + "\t\t\t" + price);
+                total += price;
+            }
+            Console.WriteLine("--------------------------------------------------------------------------------------------");
+            Console.WriteLine("Total a pagar\t\t\t\t\t\t\t{0}", total);
+
+            //Console.WriteLine("\nFor shop again enter 0 or logout enter 1");
+            Console.WriteLine("\nComprar de nuevo (0) - Cerrar Sesion (1)");
+            int opc = EntradaUsuario("Ingresa tu opcion", "Entrada incorrecta");
+
+            if (opc == 0)
+            {
+                DesplegarItem();
+                ConsumidorOperacion();
+              //  CustomerOperation();
+            }
+            else
+            {
+               // Begin();
+            }
+        }
+
+        public Item GetItem(int opcion)
+        {
+            foreach (Item t in Items)
+            {
+                if (opcion == t.Id)
+                    return t;
+            }
+            return null;
+        }
+
+
     }//******Fin de la clase Inicio
 
 
