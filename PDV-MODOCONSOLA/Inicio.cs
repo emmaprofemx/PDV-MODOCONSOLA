@@ -34,23 +34,21 @@ namespace PDV_MODOCONSOLA
         public string ErrorCompraPrompt = "Opcion Incorrecta. Intenta de nuevo";
         public string VerCarritoPrompt = "Ingresa 0 para visualizar el carrito de compras";
         public string ItemnoEncontrado = "Item no encontrado. Intenta de nuevo";
-
-        //
         public string IngresarPrecio = "Ingresa Precio";
 
         public void Ejecutar()
         {
-            Console.WriteLine("Ingresa 0 para iniciar como administrador o 1  para ingresar como consumidor");
+            Console.WriteLine("Ingresa 0 para iniciar como ADMIN o 1 para ingresar como Cliente");
             int opclogin = entradaUsuario(LoginOpcionPrompt, LoginOpcionErrorPrompt);
             switch (opclogin)
             {
                 case 0:
-                    Console.WriteLine("Ingresando como Admin...");
+                    Console.WriteLine("Ingresando como ADMIN...");
                     mostrarProductos();
                     operacionesAdmin();
                     break;
                 case 1:
-                    Console.WriteLine("Ingresando como Consumidor...");
+                    Console.WriteLine("Ingresando como Cliente...");
                     operacionesClientes();
                     break;
                 default:
@@ -95,14 +93,17 @@ namespace PDV_MODOCONSOLA
         }
         public void agregarAlCarrito(Item item)
         {
+            //Se pide ingresar la cantidad del producto
             string itemNombre = item.ItemNombre;
             Console.Write("Producto {0} encontrado. ", itemNombre);
             int cantidad = entradaUsuario(IngresarCantidad, CantidadErrorPrompt);
 
+            //Si hay suficientes unidades de x articulo pasamos a la condicion verdadera
             if (item.ItemStock >= cantidad)
             {
                 Console.WriteLine("Producto agregado");
                 checarInventario(item, cantidad);
+                //Se resta la cantidad que ingreso el usuario al total de unidades disponibles
                 item.ItemStock -= cantidad;
                 operacionesClientes();
             }
@@ -114,6 +115,7 @@ namespace PDV_MODOCONSOLA
         }
         public void checarInventario(Item item, int cantidad)
         {
+
             if (!ComprarItems.ContainsKey(item.Id))
             {
                 ComprarItems.Add(item.Id, new ComprarItem { Id = item.Id, Cantidad = cantidad, Item = item });
@@ -125,6 +127,8 @@ namespace PDV_MODOCONSOLA
         }
         public void desplegarCarrito(Dictionary<int, ComprarItem> productosCompradosList)
         {
+            //Se muestra a continuacion el ticket de compra de los articulos que haya comprado
+
             int total = 0;
             double iva = 0.16;
             Console.WriteLine("\n-----------------------------------------TICKET---------------------------------------\n");
@@ -163,20 +167,20 @@ namespace PDV_MODOCONSOLA
                 case (int)PDV_MODOCONSOLA.AdminOperation.AgregarItem:
                     agregarProducto();
                     break;
-                //Caso 2 para actualizar stock (precio en este momento)
+                //Caso 2 para actualizar stock
                 case (int)PDV_MODOCONSOLA.AdminOperation.ActualizarItem:
                     actualizarStock();
                     break;
-                //Caso 2 para actualizar stock (precio en este momento)
+                //Caso 3 para actualizar precio
                 case (int)PDV_MODOCONSOLA.AdminOperation.ActualizarPrecio:
                     actualizarPrecio();
                     break;
-                //caso 3 para mostrar lista de productos
+                //caso 4 para mostrar lista de productos
                 case (int)PDV_MODOCONSOLA.AdminOperation.MostrarLista:
                     mostrarProductos();
                     operacionesAdmin();
                     break;
-                    //Caso 4 para salir de las operaciones en modo admin
+                    //Caso 5 para salir de las operaciones en modo admin
                 case (int)PDV_MODOCONSOLA.AdminOperation.Salir:
                     Ejecutar();
                     mostrarProductos();
@@ -197,7 +201,7 @@ namespace PDV_MODOCONSOLA
             Console.WriteLine("Producto agregado exitosamente");
             operacionesAdmin();
         }
-
+        
         //Funciona para cambiar el precio
         public void actualizarPrecio()
         {
@@ -207,7 +211,7 @@ namespace PDV_MODOCONSOLA
                 {
                     int precio = entradaUsuario(IngresarPrecio , CantidadErrorPrompt);
                     if (precio > 0)
-                        if (Items != null) Items[input - 1].ItemPrecio = precio;
+                        if (Items != null) Items[input - 1].ItemPrecio = precio; //Establecemos el cambio del precio
                     mostrarProductos();
                     operacionesAdmin();
                     return;
@@ -222,6 +226,7 @@ namespace PDV_MODOCONSOLA
             operacionesAdmin();
         }
         //Caso 2
+       
         public void actualizarStock()
         {
             var input = entradaUsuario("Selecciona Id del producto:", AdminOpcionPrompt);
@@ -230,7 +235,7 @@ namespace PDV_MODOCONSOLA
                 {
                     int cantidad = entradaUsuario(IngresarCantidad, CantidadErrorPrompt);
                     if (cantidad > 0)
-                        if (Items != null) Items[input - 1].ItemStock += cantidad;
+                        if (Items != null) Items[input - 1].ItemStock += cantidad; //Aumentamos el stock con el valor ingresado y se suma con el valor actual del stock.
                     mostrarProductos();
                     operacionesAdmin();
                     return;
@@ -248,6 +253,7 @@ namespace PDV_MODOCONSOLA
 
         public void mostrarProductos()
         {
+            //Mostramos todos los productos mediante el uso de un foreach
             Console.WriteLine("Productos");
             Console.WriteLine("===========================");
             Console.WriteLine("Id\tProducto\tPrecio\t Inventario");
@@ -256,7 +262,9 @@ namespace PDV_MODOCONSOLA
             {
                 Console.WriteLine(item.Id + "\t" + item.ItemNombre + "\t\t" + item.ItemPrecio + "\t" + item.ItemStock);
             }
+            
         }
+
         public void DefaultInit()
         {
             Items = new List<Item>
