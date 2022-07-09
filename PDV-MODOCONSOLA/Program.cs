@@ -6,7 +6,9 @@ namespace PDV_MODOCONSOLA
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Inicio empezar = new Inicio();
+            empezar.DefaultInit();
+            empezar.Ejecutar();
         }
     }
 }
