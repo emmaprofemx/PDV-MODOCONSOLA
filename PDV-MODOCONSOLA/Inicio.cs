@@ -7,11 +7,6 @@ namespace PDV_MODOCONSOLA
 
     public enum AdminOperation
     {
-       /* AddItem = 1,
-        UpdateItem = 2,
-        DisplayItem = 3,
-        Logout = 4
-       */
         AgregarItem = 1,
         ActualizarItem = 2,
         MostrarLista= 3,
@@ -126,6 +121,7 @@ namespace PDV_MODOCONSOLA
         public void desplegarCarrito(Dictionary<int, ComprarItem> productosCompradosList)
         {
             int total = 0;
+            double iva = 0.16;
             Console.WriteLine("\n-----------------------------------------TICKET---------------------------------------\n");
             Console.WriteLine("Id\t\tCantidad\t\tPrecio\t\tSuma");
             foreach (var pair in productosCompradosList)
@@ -136,7 +132,9 @@ namespace PDV_MODOCONSOLA
                 total += precio;
             }
             Console.WriteLine("--------------------------------------------------------------------------------------------");
-            Console.WriteLine("Total a pagar\t\t\t\t\t\t\t{0}", total);
+            double resultado = total * iva;
+            Console.WriteLine("Iva: \t\t\t\t\t\t\t{0}", resultado);
+            Console.WriteLine("Total a pagar\t\t\t\t\t\t\t{0}", (total + resultado));
 
             Console.WriteLine("\nComprar de nuevo 0 , Salir 1");
             int opc = entradaUsuario("Ingresa tu opcion", "Entrada Incorrecta");
