@@ -9,8 +9,9 @@ namespace PDV_MODOCONSOLA
     {
         AgregarItem = 1,
         ActualizarItem = 2,
-        MostrarLista= 3,
-        Salir = 4
+        ActualizarPrecio = 3 ,
+        MostrarLista= 4,
+        Salir = 5 , 
     }
     class Inicio
     {//Empieza la clase Inicio
@@ -33,6 +34,10 @@ namespace PDV_MODOCONSOLA
         public string ErrorCompraPrompt = "Opcion Incorrecta. Intenta de nuevo";
         public string VerCarritoPrompt = "Ingresa 0 para visualizar el carrito de compras";
         public string ItemnoEncontrado = "Item no encontrado. Intenta de nuevo";
+
+        //
+        public string IngresarPrecio = "Ingresa Precio";
+
         public void Ejecutar()
         {
             Console.WriteLine("Ingresa 0 para iniciar como administrador o 1  para ingresar como consumidor");
@@ -150,20 +155,28 @@ namespace PDV_MODOCONSOLA
         }
         public void operacionesAdmin()
         {
-            Console.WriteLine("\n 1)Agregar nuevo producto \n 2)Actualizar Stock \n 3)Desplegar Lista \n 4)Salir");
+            Console.WriteLine("\n 1)Agregar nuevo producto \n 2)Actualizar Stock \n 3)Actualizar Precio \n 4)Desplegar Lista \n 5)Salir");
             int opcAdmin = entradaUsuario(AdminOpcionPrompt, AdminOpcionErrorPrompt);
             switch (opcAdmin)
             {
+                //Caso 1 para Insertar Producto
                 case (int)PDV_MODOCONSOLA.AdminOperation.AgregarItem:
                     agregarProducto();
                     break;
+                //Caso 2 para actualizar stock (precio en este momento)
                 case (int)PDV_MODOCONSOLA.AdminOperation.ActualizarItem:
-                    actualizarProducto();
+                    actualizarStock();
                     break;
+                //Caso 2 para actualizar stock (precio en este momento)
+                case (int)PDV_MODOCONSOLA.AdminOperation.ActualizarPrecio:
+                    actualizarPrecio();
+                    break;
+                //caso 3 para mostrar lista de productos
                 case (int)PDV_MODOCONSOLA.AdminOperation.MostrarLista:
                     mostrarProductos();
                     operacionesAdmin();
                     break;
+                    //Caso 4 para salir de las operaciones en modo admin
                 case (int)PDV_MODOCONSOLA.AdminOperation.Salir:
                     Ejecutar();
                     mostrarProductos();
@@ -184,10 +197,35 @@ namespace PDV_MODOCONSOLA
             Console.WriteLine("Producto agregado exitosamente");
             operacionesAdmin();
         }
-        public void actualizarProducto()
+
+        //Funciona para cambiar el precio
+        public void actualizarPrecio()
         {
-            var input = entradaUsuario("Selecciona Id del producto", AdminOpcionPrompt);
-            if (input != 4)
+            var input = entradaUsuario("Selecciona Id del producto:", AdminOpcionPrompt);
+            if (input != 6)
+                if (input <= Items.Count)
+                {
+                    int precio = entradaUsuario(IngresarPrecio , CantidadErrorPrompt);
+                    if (precio > 0)
+                        if (Items != null) Items[input - 1].ItemPrecio = precio;
+                    mostrarProductos();
+                    operacionesAdmin();
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine(AdminOpcionErrorPrompt);
+                    operacionesAdmin();
+                }
+            else
+                mostrarProductos();
+            operacionesAdmin();
+        }
+        //Caso 2
+        public void actualizarStock()
+        {
+            var input = entradaUsuario("Selecciona Id del producto:", AdminOpcionPrompt);
+            if (input != 6)
                 if (input <= Items.Count)
                 {
                     int cantidad = entradaUsuario(IngresarCantidad, CantidadErrorPrompt);
@@ -206,6 +244,8 @@ namespace PDV_MODOCONSOLA
                 mostrarProductos();
             operacionesAdmin();
         }
+
+
         public void mostrarProductos()
         {
             Console.WriteLine("Productos");
