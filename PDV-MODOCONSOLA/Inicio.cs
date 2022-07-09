@@ -9,10 +9,11 @@ namespace PDV_MODOCONSOLA
     public enum AdminOperation
     {
         AgregarItem = 1,
-        ActualizarItem = 2,
-        ActualizarPrecio = 3 ,
-        MostrarLista= 4,
-        Salir = 5 , 
+        EliminarItem = 2,
+        ActualizarItem = 3,
+        ActualizarPrecio = 4 ,
+        MostrarLista= 5,
+        Salir = 6 
     }
     class Inicio
     {//Empieza la clase Inicio
@@ -22,8 +23,6 @@ namespace PDV_MODOCONSOLA
         public Dictionary<int, ComprarItem> ComprarItems;
         public Dictionary<int, int> StockItem = new Dictionary<int, int>();
         public int Suma = 0;
-
-       
 
         public string LoginOpcionPrompt = "Ingresa una opcion:";
         public string LoginOpcionErrorPrompt = "Opcion Incorrecta. Intenta de nuevo";
@@ -144,7 +143,7 @@ namespace PDV_MODOCONSOLA
             Console.WriteLine("--------------------------------------------------------------------------------------------");
             double resultado = total * iva;
             Console.WriteLine("Iva: \t\t\t\t\t\t\t{0}", resultado);
-            Console.WriteLine("Total a pagar\t\t\t\t\t\t\t{0}", (total + resultado));
+            Console.WriteLine("Total a pagar\t\t\t\t\t\t\t${0}", (total + resultado));
 
             Console.WriteLine("\nComprar de nuevo 0 , Salir 1");
             int opc = entradaUsuario("Ingresa tu opcion", "Entrada Incorrecta");
@@ -160,7 +159,7 @@ namespace PDV_MODOCONSOLA
         }
         public void operacionesAdmin()
         {
-            Console.WriteLine("\n 1)Agregar nuevo producto \n 2)Actualizar Stock \n 3)Actualizar Precio \n 4)Desplegar Lista \n 5)Salir");
+            Console.WriteLine("\n 1)Agregar nuevo producto \n 2)Eliminar Producto \n 3)Actualizar Stock \n 4)Actualizar Precio \n 5)Desplegar Lista \n 6)Salir");
             int opcAdmin = entradaUsuario(AdminOpcionPrompt, AdminOpcionErrorPrompt);
             switch (opcAdmin)
             {
@@ -168,21 +167,25 @@ namespace PDV_MODOCONSOLA
                 case (int)PDV_MODOCONSOLA.AdminOperation.AgregarItem:
                     agregarProducto();
                     break;
-                //Caso 2 para actualizar stock
+                //Caso 2 para  ELIMINAR producto
+                case (int)PDV_MODOCONSOLA.AdminOperation.EliminarItem:
+                    eliminarProducto();
+                    break;
+                //Caso 3 para actualizar stock
                 case (int)PDV_MODOCONSOLA.AdminOperation.ActualizarItem:
                     actualizarStock();
                     break;
-                //Caso 3 para actualizar precio
+                //Caso 4 para actualizar precio
                 case (int)PDV_MODOCONSOLA.AdminOperation.ActualizarPrecio:
                     actualizarPrecio();
                     break;
-                //caso 4 para mostrar lista de productos
+                //caso 5 para mostrar lista de productos
                 case (int)PDV_MODOCONSOLA.AdminOperation.MostrarLista:
                     mostrarProductos();
-                    eliminarProducto();
+                   // eliminarProducto();
                     operacionesAdmin();
                     break;
-                    //Caso 5 para salir de las operaciones en modo admin
+                    //Caso 6 para salir de las operaciones en modo ADMIN
                 case (int)PDV_MODOCONSOLA.AdminOperation.Salir:
                     Ejecutar();
                     mostrarProductos();
@@ -200,16 +203,17 @@ namespace PDV_MODOCONSOLA
             int precio = entradaUsuario("Ingresa el precio:", "Error , Ingresa el precio correcto...");
             int cantidad = entradaUsuario("Ingresa la cantidad:", "Error , Ingresa la cantidad correcta...");
             Items.Add(new Item { Id = Items.Count + 1, ItemNombre = nombre, ItemPrecio = precio, ItemStock = cantidad });
-            Console.WriteLine("Producto agregado exitosamente");
+            Console.WriteLine("***Producto agregado exitosamente***");
             operacionesAdmin();
         }
         public void eliminarProducto()
         {
-            Console.WriteLine("Ingresa el item del producto: ");
+            //Estructura para eliminar un producto del inventario
+            Console.WriteLine("Ingresa el item(ID) del producto: ");
             int item = Convert.ToInt32(Console.ReadLine());
             var itemToRemove = Items.Single(r => r.Id == item);
             Items.Remove(itemToRemove);
-            Console.WriteLine("Producto eliminado exitosamente");
+            Console.WriteLine("***Producto eliminado exitosamente***");
             operacionesAdmin();
         }
 
