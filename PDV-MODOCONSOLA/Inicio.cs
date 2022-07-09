@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace PDV_MODOCONSOLA
@@ -178,6 +179,7 @@ namespace PDV_MODOCONSOLA
                 //caso 4 para mostrar lista de productos
                 case (int)PDV_MODOCONSOLA.AdminOperation.MostrarLista:
                     mostrarProductos();
+                    eliminarProducto();
                     operacionesAdmin();
                     break;
                     //Caso 5 para salir de las operaciones en modo admin
@@ -201,7 +203,16 @@ namespace PDV_MODOCONSOLA
             Console.WriteLine("Producto agregado exitosamente");
             operacionesAdmin();
         }
-        
+        public void eliminarProducto()
+        {
+            Console.WriteLine("Ingresa el item del producto: ");
+            int item = Convert.ToInt32(Console.ReadLine());
+            var itemToRemove = Items.Single(r => r.Id == item);
+            Items.Remove(itemToRemove);
+            Console.WriteLine("Producto eliminado exitosamente");
+            operacionesAdmin();
+        }
+
         //Funciona para cambiar el precio
         public void actualizarPrecio()
         {
